@@ -30,8 +30,11 @@ class FinancialData
 
     num_years.times do |year|
       business_incomes = @businesses.map do |business|
-        growth_rate = year < 5 ? business[:growth_rates][year] : business[:growth_rates][5]
-        income = business[:initial_income] * (1 + growth_rate / 100) ** (year + 1)
+        income = business[:initial_income]
+        (0..year).each do |y|
+          growth_rate = y < 5 ? business[:growth_rates][y] : business[:growth_rates][5]
+          income *= (1 + growth_rate / 100)
+        end
         { name: business[:name], income: income }
       end
 
