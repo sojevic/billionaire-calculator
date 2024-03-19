@@ -1,0 +1,42 @@
+<!-- views/index.erb -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Billionaire Calculator</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <h1>Billionaire Calculator</h1>
+    <form id="calculator-form">
+      <div>
+        <label for="initial-income">Initial Business Income (before tax):</label>
+        <input type="number" id="initial-income" name="initial-income" required>
+      </div>
+      <div>
+        <label for="existing-debt">Existing Debt:</label>
+        <input type="number" id="existing-debt" name="existing-debt" required>
+      </div>
+      <div>
+        <label for="tax-rate">Company Tax Rate (%):</label>
+        <input type="number" id="tax-rate" name="tax-rate" value="25" required>
+      </div>
+      <div>
+        <label for="inflation-rate">Annual Inflation Rate (%):</label>
+        <input type="number" id="inflation-rate" name="inflation-rate" value="2" required>
+      </div>
+      <div id="new-business-container">
+        <!-- This section will be populated with new business input fields dynamically -->
+      </div>
+      <div id="new-debt-container">
+        <!-- This section will be populated with new debt input fields dynamically -->
+      </div>
+      <button type="button" id="add-business-btn">Add New Business</button>
+      <button type="button" id="add-debt-btn">Add New Debt</button>
+      <button type="submit">Calculate</button>
+    </form>
+    <div id="calculator-output">
+      <!-- This div will be populated with the calculator output -->
+    </div>
+    <script src="/app.js"></script>
+  </body>
+</html>
