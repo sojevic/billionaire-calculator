@@ -1,5 +1,5 @@
 class FinancialData
-  attr_reader :data
+  attr_reader :data, :businesses
 
   def initialize(initial_income, income_growth_rate, tax_rate)
     @businesses = []
@@ -9,6 +9,16 @@ class FinancialData
 
   def add_business(name, initial_income, income_growth_rate)
     @businesses << { name: name, initial_income: initial_income, income_growth_rate: income_growth_rate }
+  end
+
+  def update_business(index, name, initial_income, income_growth_rate)
+    @businesses[index][:name] = name
+    @businesses[index][:initial_income] = initial_income
+    @businesses[index][:income_growth_rate] = income_growth_rate
+  end
+
+  def delete_business(index)
+    @businesses.delete_at(index)
   end
 
   def calculate(num_years)

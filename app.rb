@@ -41,3 +41,29 @@ post '/calculate' do
   # Pass the calculated data to the results template
   erb :results, locals: { financial_data: financial_data }
 end
+
+get '/edit_business/:index' do
+  index = params[:index].to_i
+  @business = $financial_data.businesses[index]
+  erb :edit_business
+end
+
+post '/update_business/:index' do
+  index = params[:index].to_i
+  business_name = params[:business_name]
+  initial_income = params[:initial_income].to_f
+  income_growth_rate = params[:income_growth_rate].to_f
+
+  $financial_data.update_business(index, business_name, initial_income, income_growth_rate)
+  $financial_data.calculate(50)
+
+  redirect '/'
+end
+
+delete '/delete_business/:index' do
+  index = params[:index].to_i
+  $financial_data.delete_business(index)
+  $financial_data.calculate(50)
+
+  redirect '/'
+end
