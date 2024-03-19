@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Billionaire Calculator Results</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+  <div class="container mx-auto py-8">
+    <h1 class="text-3xl font-bold mb-6">Billionaire Calculator Results</h1>
+    <table class="table-auto w-full bg-white shadow-md rounded-lg overflow-hidden">
+      <thead class="bg-gray-200 text-gray-700">
+        <tr>
+          <th class="px-4 py-2">Year</th>
+          <th class="px-4 py-2">Business Income (Before Tax)</th>
+          <th class="px-4 py-2">Business Income (After Tax)</th>
+          <th class="px-4 py-2">Outstanding Debt</th>
+          <th class="px-4 py-2">Debt Repayments</th>
+          <th class="px-4 py-2">Bank Balance</th>
+          <th class="px-4 py-2">New Investments</th>
+        </tr>
+      </thead>
+      <tbody class="text-gray-700">
+        <% financial_data.data.each_with_index do |year_data, index| %>
+          <tr class="<%= index.even? ? 'bg-gray-100' : '' %>">
+            <td class="border px-4 py-2"><%= index + 1 %></td>
+            <td class="border px-4 py-2">$<%= number_with_delimiter('%.2f' % year_data[:business_income_before_tax]) %></td>
+            <td class="border px-4 py-2">$<%= number_with_delimiter('%.2f' % year_data[:business_income_after_tax]) %></td>
+            <td class="border px-4 py-2">$<%= number_with_delimiter('%.2f' % year_data[:outstanding_debt]) %></td>
+            <td class="border px-4 py-2">$<%= number_with_delimiter('%.2f' % year_data[:debt_repayments]) %></td>
+            <td class="border px-4 py-2">$<%= number_with_delimiter('%.2f' % year_data[:bank_balance]) %></td>
+            <td class="border px-4 py-2">$<%= number_with_delimiter('%.2f' % year_data[:new_investments]) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>
