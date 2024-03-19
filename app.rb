@@ -67,3 +67,15 @@ delete '/delete_business/:index' do
 
   redirect '/'
 end
+
+post '/add_debt' do
+  debt_amount = params[:debt_amount].to_f
+  interest_rate = params[:interest_rate].to_f
+  repayment_period = params[:repayment_period].to_i
+  pay_back_asap = params[:pay_back_asap] == 'on'
+
+  $financial_data.add_debt(debt_amount, interest_rate, repayment_period, pay_back_asap)
+  $financial_data.calculate(50)
+
+  redirect '/'
+end
