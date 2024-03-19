@@ -6,29 +6,71 @@
 </head>
 <body class="bg-gray-100">
   <div class="container mx-auto py-8">
-    <h1 class="text-3xl font-bold mb-6 text-center">Billionaire Calculator</h1>
-    <form action="/calculate" method="post" class="max-w-sm mx-auto">
-      <div class="mb-4">
-        <label for="initial_income" class="block text-gray-700 font-bold mb-2">Initial Business Income:</label>
-        <div class="relative">
-          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <span class="text-gray-500 sm:text-sm">$</span>
-          </div>
-          <input type="number" id="initial_income" name="initial_income" step="0.01" required class="w-full pl-7 px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:border-blue-500">
+    <h1 class="text-3xl font-bold mb-6">Billionaire Calculator</h1>
+    <div class="flex">
+      <div class="w-1/4 mr-8">
+        <div class="bg-white shadow-md rounded-lg p-6">
+          <h2 class="text-2xl font-bold mb-4">Add New Business</h2>
+          <form action="/add_business" method="post">
+            <div class="mb-4">
+                <label for="business_name" class="block text-gray-700 font-bold mb-2">Business Name:</label>
+                <input type="text" id="business_name" name="business_name" required class="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:border-blue-500">
+            </div>
+            <div class="mb-4">
+              <label for="initial_income" class="block text-gray-700 font-bold mb-2">Initial Business Income:</label>
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <span class="text-gray-500 sm:text-sm">$</span>
+                </div>
+                <input type="number" id="initial_income" name="initial_income" step="0.01" required class="w-full pl-7 px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:border-blue-500">
+              </div>
+            </div>
+            <div class="mb-4">
+              <label for="income_growth_rate" class="block text-gray-700 font-bold mb-2">Income Growth Rate (%):</label>
+              <input type="number" id="income_growth_rate" name="income_growth_rate" step="0.01" required class="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:border-blue-500">
+            </div>
+            <div>
+              <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Add Business</button>
+            </div>
+          </form>
+        </div>
+        <!-- Placeholder for future debt addition form -->
+        <div class="bg-white shadow-md rounded-lg p-6 mt-8">
+          <h2 class="text-2xl font-bold mb-4">Add Debt</h2>
+          <!-- Add debt form fields here -->
         </div>
       </div>
-      <div class="mb-4">
-        <label for="income_growth_rate" class="block text-gray-700 font-bold mb-2">Income Growth Rate (%):</label>
-        <input type="number" id="income_growth_rate" name="income_growth_rate" step="0.01" required class="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:border-blue-500">
+      <div class="w-3/4">
+        <table class="table-auto w-full bg-white shadow-md rounded-lg overflow-hidden">
+          <thead class="bg-gray-200 text-gray-700">
+            <tr>
+              <th class="px-4 py-2">Year</th>
+              <th class="px-4 py-2">Business Income (Before Tax)</th>
+              <th class="px-4 py-2">Business Income (After Tax)</th>
+              <th class="px-4 py-2">Outstanding Debt</th>
+              <th class="px-4 py-2">Debt Repayments</th>
+              <th class="px-4 py-2">Bank Balance</th>
+              <th class="px-4 py-2">New Investments</th>
+            </tr>
+          </thead>
+          <tbody class="text-gray-700">
+            <% $financial_data.data.each_with_index do |year_data, index| %>
+                <tr class="<%= index.even? ? 'bg-gray-100' : '' %>">
+                <td class="border px-4 py-2"><%= index + 1 %></td>
+                <td class="border px-4 py-2" title="<% year_data[:business_incomes].each do |business| %><%= business[:name] %> - $<%= number_with_delimiter('%.2f' % business[:income]) %>&#013;<% end %>">
+                    $<%= number_with_delimiter('%.2f' % year_data[:business_income_before_tax]) %>
+                </td>
+                <td class="border px-4 py-2">$<%= number_with_delimiter('%.2f' % year_data[:business_income_after_tax]) %></td>
+                <td class="border px-4 py-2">$<%= number_with_delimiter('%.2f' % year_data[:outstanding_debt]) %></td>
+                <td class="border px-4 py-2">$<%= number_with_delimiter('%.2f' % year_data[:debt_repayments]) %></td>
+                <td class="border px-4 py-2">$<%= number_with_delimiter('%.2f' % year_data[:bank_balance]) %></td>
+                <td class="border px-4 py-2">$<%= number_with_delimiter('%.2f' % year_data[:new_investments]) %></td>
+                </tr>
+            <% end %>
+            </tbody>
+        </table>
       </div>
-      <div class="mb-4">
-        <label for="tax_rate" class="block text-gray-700 font-bold mb-2">Tax Rate (%):</label>
-        <input type="number" id="tax_rate" name="tax_rate" step="0.01" required class="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:border-blue-500">
-      </div>
-      <div>
-        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Calculate</button>
-      </div>
-    </form>
+    </div>
   </div>
 </body>
 </html>

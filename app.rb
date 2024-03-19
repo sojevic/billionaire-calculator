@@ -5,8 +5,25 @@ require_relative 'financial_data'
 
 include ActionView::Helpers::NumberHelper
 
+TAX_RATE = 25.0
+
+configure do
+  $financial_data = FinancialData.new(0, 0, TAX_RATE)
+end
+
 get '/' do
   erb :index
+end
+
+post '/add_business' do
+  business_name = params[:business_name]
+  initial_income = params[:initial_income].to_f
+  income_growth_rate = params[:income_growth_rate].to_f
+
+  $financial_data.add_business(business_name, initial_income, income_growth_rate)
+  $financial_data.calculate(50)
+
+  redirect '/'
 end
 
 post '/calculate' do
