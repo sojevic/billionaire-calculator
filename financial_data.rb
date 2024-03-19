@@ -7,14 +7,14 @@ class FinancialData
     @data = []
   end
 
-  def add_business(name, initial_income, income_growth_rate)
-    @businesses << { name: name, initial_income: initial_income, income_growth_rate: income_growth_rate }
+  def add_business(name, initial_income, growth_rates)
+    @businesses << { name: name, initial_income: initial_income, growth_rates: growth_rates }
   end
 
-  def update_business(index, name, initial_income, income_growth_rate)
+  def update_business(index, name, initial_income, growth_rates)
     @businesses[index][:name] = name
     @businesses[index][:initial_income] = initial_income
-    @businesses[index][:income_growth_rate] = income_growth_rate
+    @businesses[index][:growth_rates] = growth_rates
   end
 
   def delete_business(index)
@@ -30,7 +30,8 @@ class FinancialData
 
     num_years.times do |year|
       business_incomes = @businesses.map do |business|
-        income = business[:initial_income] * (1 + business[:income_growth_rate] / 100) ** year
+        growth_rate = year < 5 ? business[:growth_rates][year] : business[:growth_rates][5]
+        income = business[:initial_income] * (1 + growth_rate / 100) ** (year + 1)
         { name: business[:name], income: income }
       end
 

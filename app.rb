@@ -18,9 +18,9 @@ end
 post '/add_business' do
   business_name = params[:business_name]
   initial_income = params[:initial_income].to_f
-  income_growth_rate = params[:income_growth_rate].to_f
+  growth_rates = (1..6).map { |i| params["income_growth_rate_#{i}"].to_f }
 
-  $financial_data.add_business(business_name, initial_income, income_growth_rate)
+  $financial_data.add_business(business_name, initial_income, growth_rates)
   $financial_data.calculate(50)
 
   redirect '/'
@@ -52,9 +52,9 @@ post '/update_business/:index' do
   index = params[:index].to_i
   business_name = params[:business_name]
   initial_income = params[:initial_income].to_f
-  income_growth_rate = params[:income_growth_rate].to_f
+  growth_rates = (1..6).map { |i| params["income_growth_rate_#{i}"].to_f }
 
-  $financial_data.update_business(index, business_name, initial_income, income_growth_rate)
+  $financial_data.update_business(index, business_name, initial_income, growth_rates)
   $financial_data.calculate(50)
 
   redirect '/'

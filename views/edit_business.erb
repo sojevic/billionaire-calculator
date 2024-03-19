@@ -22,9 +22,29 @@
         </div>
       </div>
       <div class="mb-4">
-        <label for="income_growth_rate" class="block text-gray-700 font-bold mb-2">Income Growth Rate (%):</label>
-        <input type="number" id="income_growth_rate" name="income_growth_rate" value="<%= @business[:income_growth_rate] %>" step="0.01" required class="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:border-blue-500">
-      </div>
+        <label for="income_growth_rate_1" class="block text-gray-700 font-bold mb-2">Income Growth Rate (Year 1):</label>
+        <input type="number" id="income_growth_rate_1" name="income_growth_rate_1" value="<%= @business[:growth_rates][0] %>" step="0.01" required class="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:border-blue-500">
+        </div>
+        <div class="mb-4">
+        <label for="income_growth_rate_2" class="block text-gray-700 font-bold mb-2">Income Growth Rate (Year 2):</label>
+        <input type="number" id="income_growth_rate_2" name="income_growth_rate_2" value="<%= @business[:growth_rates][1] %>" step="0.01" required class="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:border-blue-500">
+        </div>
+        <div class="mb-4">
+        <label for="income_growth_rate_3" class="block text-gray-700 font-bold mb-2">Income Growth Rate (Year 3):</label>
+        <input type="number" id="income_growth_rate_3" name="income_growth_rate_3" value="<%= @business[:growth_rates][2] %>" step="0.01" required class="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:border-blue-500">
+        </div>
+        <div class="mb-4">
+        <label for="income_growth_rate_4" class="block text-gray-700 font-bold mb-2">Income Growth Rate (Year 4):</label>
+        <input type="number" id="income_growth_rate_4" name="income_growth_rate_4" value="<%= @business[:growth_rates][3] %>" step="0.01" required class="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:border-blue-500">
+        </div>
+        <div class="mb-4">
+        <label for="income_growth_rate_5" class="block text-gray-700 font-bold mb-2">Income Growth Rate (Year 5):</label>
+        <input type="number" id="income_growth_rate_5" name="income_growth_rate_5" value="<%= @business[:growth_rates][4] %>" step="0.01" required class="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:border-blue-500">
+        </div>
+        <div class="mb-4">
+        <label for="income_growth_rate_6" class="block text-gray-700 font-bold mb-2">Income Growth Rate (Year 6+):</label>
+        <input type="number" id="income_growth_rate_6" name="income_growth_rate_6" value="<%= @business[:growth_rates][5] %>" step="0.01" required class="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:border-blue-500">
+        </div>
       <div>
         <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Update Business</button>
         <a href="/" class="ml-4 text-gray-600 hover:text-gray-800">Cancel</a>
