@@ -1,0 +1,31 @@
+{
+  "businesses": [
+    {
+      "name": "MarEng",
+      "initial_income": 200000.0,
+      "growth_rates": [
+        0.0,
+        15.0,
+        15.0,
+        15.0,
+        15.0,
+        15.0
+      ]
+    },
+    {
+      "name": "CarParts",
+      "initial_income": 15000.0,
+      "growth_rates": [
+        50.0,
+        40.0,
+        30.0,
+        20.0,
+        15.0,
+        15.0
+      ]
+    }
+  ],
+  "debts": [
+
+  ]
+}

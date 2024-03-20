@@ -5,15 +5,23 @@ require_relative 'financial_data'
 
 include ActionView::Helpers::NumberHelper
 
+DATA_FILE = 'data.json'
 TAX_RATE = 25.0
 TABLE_YEARS = 25
 
 configure do
   $financial_data = FinancialData.new(0, 0, TAX_RATE)
+  $financial_data.load_from_file(DATA_FILE) if File.exist?(DATA_FILE)
 end
 
 get '/' do
-  erb :index
+  if File.exist?(DATA_FILE)
+    $financial_data.calculate(TABLE_YEARS)
+    erb :index
+  else
+    $financial_data = FinancialData.new(0, 0, TAX_RATE)
+    erb :index
+  end
 end
 
 ############################################################
@@ -27,7 +35,7 @@ post '/add_business' do
 
   $financial_data.add_business(business_name, initial_income, growth_rates)
   $financial_data.calculate(TABLE_YEARS)
-
+  $financial_data.save_to_file(DATA_FILE)
   redirect '/'
 end
 
@@ -61,7 +69,7 @@ post '/update_business/:index' do
 
   $financial_data.update_business(index, business_name, initial_income, growth_rates)
   $financial_data.calculate(TABLE_YEARS)
-
+  $financial_data.save_to_file(DATA_FILE)
   redirect '/'
 end
 
@@ -69,7 +77,7 @@ delete '/delete_business/:index' do
   index = params[:index].to_i
   $financial_data.delete_business(index)
   $financial_data.calculate(TABLE_YEARS)
-
+  $financial_data.save_to_file(DATA_FILE)
   redirect '/'
 end
 
@@ -86,7 +94,7 @@ post '/add_debt' do
 
   $financial_data.add_debt(debt_name, debt_amount, interest_rate, repayment_period, pay_back_asap)
   $financial_data.calculate(50)
-
+  $financial_data.save_to_file(DATA_FILE)
   redirect '/'
 end
 
@@ -105,7 +113,7 @@ post '/update_debt/:index' do
 
   $financial_data.update_debt(index, debt_amount, interest_rate, repayment_period, pay_back_asap)
   $financial_data.calculate(TABLE_YEARS)
-
+  $financial_data.save_to_file(DATA_FILE)
   redirect '/'
 end
 
@@ -113,6 +121,6 @@ delete '/delete_debt/:index' do
   index = params[:index].to_i
   $financial_data.delete_debt(index)
   $financial_data.calculate(TABLE_YEARS)
-
+  $financial_data.save_to_file(DATA_FILE)
   redirect '/'
 end
