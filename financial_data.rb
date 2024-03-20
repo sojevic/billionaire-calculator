@@ -80,8 +80,9 @@ class FinancialData
     end
   end
 
-  def add_debt(debt_amount, interest_rate, repayment_period, pay_back_asap)
+  def add_debt(debt_name, debt_amount, interest_rate, repayment_period, pay_back_asap)
     @debts << {
+      debt_name: debt_name,
       debt_amount: debt_amount,
       interest_rate: interest_rate,
       repayment_period: repayment_period,
