@@ -71,6 +71,21 @@
         </div>
         <!-- Placeholder for future debt addition form -->
         <div class="bg-white shadow-md rounded-lg p-6 mt-8">
+          <h2 class="text-2xl font-bold mb-4">Debts</h2>
+          <ul class="mb-4">
+            <% $financial_data.debts.each_with_index do |debt, index| %>
+              <li class="mb-2">
+                <div class="flex items-center">
+                  <span class="text-gray-800">Debt <%= index + 1 %></span>
+                  <a href="/edit_debt/<%= index %>" class="ml-2 text-blue-500 hover:underline">Edit</a>
+                  <form action="/delete_debt/<%= index %>" method="post" class="ml-2">
+                    <input type="hidden" name="_method" value="delete">
+                    <button type="submit" class="text-red-500 hover:underline">Delete</button>
+                  </form>
+                </div>
+              </li>
+            <% end %>
+          </ul>
             <h2 class="text-2xl font-bold mb-4">Add Debt</h2>
             <form action="/add_debt" method="post">
             <div class="mb-4">
