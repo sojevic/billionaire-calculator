@@ -39,33 +39,48 @@ class FinancialData
   
       business_income_before_tax = business_incomes.sum { |income| income[:income] }
       total_interest_payment = 0
-      total_principal_payment = 0
   
       @debts.each_with_index do |debt, index|
-        remaining_years = debt[:repayment_period] - year
-        if remaining_years > 0
-          annual_payment = debt_amounts[index] * (debt[:interest_rate] / 100) / (1 - (1 + debt[:interest_rate] / 100)**(-remaining_years))
-          interest_payment = debt_amounts[index] * (debt[:interest_rate] / 100)
-          principal_payment = annual_payment - interest_payment
+        next if debt_amounts[index] <= 0
   
-          total_interest_payment += interest_payment
-          total_principal_payment += principal_payment
-  
-          if debt[:pay_back_asap] && business_income_before_tax >= annual_payment
-            debt_amounts[index] -= principal_payment
-          else
-            debt_amounts[index] -= principal_payment
-          end
-        end
+        interest_payment = debt_amounts[index] * (debt[:interest_rate] / 100)
+        total_interest_payment += interest_payment
       end
   
       business_income_before_tax -= total_interest_payment
       business_income_after_tax = business_income_before_tax * (1 - @tax_rate / 100)
+      available_cash = business_income_after_tax
+  
+      total_principal_payment = 0
+  
+      @debts.each_with_index do |debt, index|
+        next if debt_amounts[index] <= 0
+  
+        if debt[:pay_back_asap]
+          principal_payment = [available_cash, debt_amounts[index]].min
+          debt_amounts[index] -= principal_payment
+          available_cash -= principal_payment
+        else
+          remaining_years = debt[:repayment_period] - year
+          if remaining_years > 0
+            annual_payment = debt_amounts[index] * (debt[:interest_rate] / 100) / (1 - (1 + debt[:interest_rate] / 100)**(-remaining_years))
+            principal_payment = [annual_payment - (debt_amounts[index] * (debt[:interest_rate] / 100)), available_cash].min
+            debt_amounts[index] -= principal_payment
+            available_cash -= principal_payment
+          else
+            principal_payment = [debt_amounts[index], available_cash].min
+            debt_amounts[index] -= principal_payment
+            available_cash -= principal_payment
+          end
+        end
+  
+        total_principal_payment += principal_payment
+      end
   
       outstanding_debt = debt_amounts.sum
       debt_repayments = total_principal_payment
   
-      bank_balance += business_income_after_tax - debt_repayments
+      bank_balance += available_cash
       new_investments = 0
   
       @data << {
