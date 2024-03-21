@@ -30,6 +30,10 @@
         <input type="number" id="repayment_period" name="repayment_period" value="<%= @debt[:repayment_period] %>" required class="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:border-blue-500">
       </div>
       <div class="mb-4">
+            <label for="debt_start_year" class="block text-gray-700 font-bold mb-2">Start Year:</label>
+            <input type="number" id="debt_start_year" name="debt_start_year" value="<%= @debt[:start_year] %>" min="1" required class="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:border-blue-500">
+        </div>
+      <div class="mb-4">
         <label for="pay_back_asap" class="block text-gray-700 font-bold mb-2">Pay Back ASAP:</label>
         <input type="checkbox" id="pay_back_asap" name="pay_back_asap" <%= 'checked' if @debt[:pay_back_asap] %> class="form-checkbox h-5 w-5 text-blue-500">
       </div>

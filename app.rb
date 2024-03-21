@@ -32,8 +32,9 @@ post '/add_business' do
   business_name = params[:business_name]
   initial_income = params[:initial_income].to_f
   growth_rates = (1..6).map { |i| params["income_growth_rate_#{i}"].to_f }
+  start_year = params[:start_year].to_i
 
-  $financial_data.add_business(business_name, initial_income, growth_rates)
+  $financial_data.add_business(business_name, initial_income, growth_rates, start_year)
   $financial_data.calculate(TABLE_YEARS)
   $financial_data.save_to_file(DATA_FILE)
   redirect '/'
@@ -66,8 +67,9 @@ post '/update_business/:index' do
   business_name = params[:business_name]
   initial_income = params[:initial_income].to_f
   growth_rates = (1..6).map { |i| params["income_growth_rate_#{i}"].to_f }
+  start_year = params[:start_year].to_i
 
-  $financial_data.update_business(index, business_name, initial_income, growth_rates)
+  $financial_data.update_business(index, business_name, initial_income, growth_rates, start_year)
   $financial_data.calculate(TABLE_YEARS)
   $financial_data.save_to_file(DATA_FILE)
   redirect '/'
@@ -91,9 +93,10 @@ post '/add_debt' do
   interest_rate = params[:interest_rate].to_f
   repayment_period = params[:repayment_period].to_i
   pay_back_asap = params[:pay_back_asap] == 'on'
+  start_year = params[:debt_start_year].to_i
 
-  $financial_data.add_debt(debt_name, debt_amount, interest_rate, repayment_period, pay_back_asap)
-  $financial_data.calculate(50)
+  $financial_data.add_debt(debt_name, debt_amount, interest_rate, repayment_period, pay_back_asap, start_year)
+  $financial_data.calculate(TABLE_YEARS)
   $financial_data.save_to_file(DATA_FILE)
   redirect '/'
 end
@@ -106,12 +109,14 @@ end
 
 post '/update_debt/:index' do
   index = params[:index].to_i
+  debt_name = params[:debt_name]
   debt_amount = params[:debt_amount].to_f
   interest_rate = params[:interest_rate].to_f
   repayment_period = params[:repayment_period].to_i
   pay_back_asap = params[:pay_back_asap] == 'on'
+  start_year = params[:debt_start_year].to_i
 
-  $financial_data.update_debt(index, debt_amount, interest_rate, repayment_period, pay_back_asap)
+  $financial_data.update_debt(index, debt_name, debt_amount, interest_rate, repayment_period, pay_back_asap, start_year)
   $financial_data.calculate(TABLE_YEARS)
   $financial_data.save_to_file(DATA_FILE)
   redirect '/'
