@@ -20,14 +20,15 @@ class FinancialData
 
   def load_from_file(file_path)
     return unless File.exist?(file_path)
-  
+
     data = JSON.parse(File.read(file_path), symbolize_names: true)
     @businesses = data[:businesses].map do |business|
       {
         name: business[:name],
         initial_income: business[:initial_income],
         growth_rates: business[:growth_rates],
-        start_year: business[:start_year] || 1
+        start_year: business[:start_year] || 1,
+        purchase_price: business[:purchase_price] || 0
       }
     end
     @debts = data[:debts].map do |debt|
@@ -42,15 +43,16 @@ class FinancialData
     end
   end
 
-  def add_business(name, initial_income, growth_rates, start_year)
-    @businesses << { name: name, initial_income: initial_income, growth_rates: growth_rates, start_year: start_year }
+  def add_business(name, initial_income, growth_rates, start_year, purchase_price)
+    @businesses << { name: name, initial_income: initial_income, growth_rates: growth_rates, start_year: start_year, purchase_price: purchase_price }
   end
 
-  def update_business(index, name, initial_income, growth_rates, start_year)
+  def update_business(index, name, initial_income, growth_rates, start_year, purchase_price)
     @businesses[index][:name] = name
     @businesses[index][:initial_income] = initial_income
     @businesses[index][:growth_rates] = growth_rates
     @businesses[index][:start_year] = start_year
+    @businesses[index][:purchase_price] = purchase_price
   end
 
   def delete_business(index)
@@ -59,39 +61,39 @@ class FinancialData
 
   def calculate(num_years)
     @data = []
-    debt_amounts = @debts.map { |debt| debt[:debt_amount] }
+    debt_amounts = @debts.map { |debt| debt[:start_year] <= 1 ? debt[:debt_amount] : 0 }
     bank_balance = 0
-  
+
     num_years.times do |year|
       business_incomes = @businesses.map do |business|
         years_active = year - business[:start_year] + 1
-        income = years_active >= 0 ? business[:initial_income] : 0
-        (0...years_active).each do |y|
-          growth_rate = y < 5 ? business[:growth_rates][y] : business[:growth_rates][5]
+        income = years_active > 0 ? business[:initial_income] : 0
+        (1..years_active).each do |y|
+          growth_rate = y <= 5 ? business[:growth_rates][y - 1] : business[:growth_rates][5]
           income *= (1 + growth_rate / 100)
         end
         { name: business[:name], income: income }
       end
-  
+
       business_income_before_tax = business_incomes.sum { |income| income[:income] }
       total_interest_payment = 0
-  
+
       @debts.each_with_index do |debt, index|
-        next if debt_amounts[index] <= 0
-  
+        next if debt[:start_year] > year + 1
+
         interest_payment = debt_amounts[index] * (debt[:interest_rate] / 100)
         total_interest_payment += interest_payment
       end
-  
+
       business_income_before_tax -= total_interest_payment
       business_income_after_tax = business_income_before_tax * (1 - @tax_rate / 100)
       available_cash = business_income_after_tax
-  
+
       total_principal_payment = 0
-  
+
       @debts.each_with_index do |debt, index|
-        next if debt_amounts[index] <= 0
-  
+        next if debt[:start_year] > year + 1
+
         if debt[:pay_back_asap]
           principal_payment = [available_cash, debt_amounts[index]].min
           debt_amounts[index] -= principal_payment
@@ -109,16 +111,28 @@ class FinancialData
             available_cash -= principal_payment
           end
         end
-  
+
         total_principal_payment += principal_payment
       end
-  
+
+      @debts.each_with_index do |debt, index|
+        if debt[:start_year] == year + 1
+          debt_amounts[index] = debt[:debt_amount]
+        end
+      end
+
       outstanding_debt = debt_amounts.sum
       debt_repayments = total_principal_payment
-  
+
+      @businesses.each do |business|
+        if business[:start_year] == year + 1
+          bank_balance -= business[:purchase_price]
+        end
+      end
+
       bank_balance += available_cash
       new_investments = 0
-  
+
       @data << {
         business_incomes: business_incomes,
         business_income_before_tax: business_income_before_tax,
@@ -143,13 +157,13 @@ class FinancialData
   end
 
   def update_debt(index, debt_name, debt_amount, interest_rate, repayment_period, pay_back_asap, start_year)
-    @debts[index][:debt_name] = debt_name
-    @debts[index][:debt_amount] = debt_amount
-    @debts[index][:interest_rate] = interest_rate
-    @debts[index][:repayment_period] = repayment_period
-    @debts[index][:pay_back_asap] = pay_back_asap
-    @debts[index][:start_year] = start_year
-  end
+  @debts[index][:debt_name] = debt_name
+  @debts[index][:debt_amount] = debt_amount
+  @debts[index][:interest_rate] = interest_rate
+  @debts[index][:repayment_period] = repayment_period
+  @debts[index][:pay_back_asap] = pay_back_asap
+  @debts[index][:start_year] = start_year
+end
 
   def delete_debt(index)
     @debts.delete_at(index)

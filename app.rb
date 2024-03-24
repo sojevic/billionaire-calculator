@@ -33,8 +33,9 @@ post '/add_business' do
   initial_income = params[:initial_income].to_f
   growth_rates = (1..6).map { |i| params["income_growth_rate_#{i}"].to_f }
   start_year = params[:start_year].to_i
+  purchase_price = params[:purchase_price].to_f
 
-  $financial_data.add_business(business_name, initial_income, growth_rates, start_year)
+  $financial_data.add_business(business_name, initial_income, growth_rates, start_year, purchase_price)
   $financial_data.calculate(TABLE_YEARS)
   $financial_data.save_to_file(DATA_FILE)
   redirect '/'
@@ -68,8 +69,9 @@ post '/update_business/:index' do
   initial_income = params[:initial_income].to_f
   growth_rates = (1..6).map { |i| params["income_growth_rate_#{i}"].to_f }
   start_year = params[:start_year].to_i
+  purchase_price = params[:purchase_price].to_f
 
-  $financial_data.update_business(index, business_name, initial_income, growth_rates, start_year)
+  $financial_data.update_business(index, business_name, initial_income, growth_rates, start_year, purchase_price)
   $financial_data.calculate(TABLE_YEARS)
   $financial_data.save_to_file(DATA_FILE)
   redirect '/'

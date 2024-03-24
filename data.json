@@ -11,23 +11,32 @@
         15.0,
         15.0
       ],
-      "start_year": 1
+      "start_year": 1,
+      "purchase_price": 0.0
     },
     {
-      "name": "CarParts",
-      "initial_income": 100000.0,
+      "name": "SAAS Company",
+      "initial_income": 1000000.0,
       "growth_rates": [
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0
+        15.0,
+        14.0,
+        13.0,
+        12.0,
+        11.0,
+        10.0
       ],
-      "start_year": 5
+      "start_year": 5,
+      "purchase_price": 3000000.0
     }
   ],
   "debts": [
-
+    {
+      "debt_name": "SAAS Debt",
+      "debt_amount": 2500000.0,
+      "interest_rate": 10.0,
+      "repayment_period": 10,
+      "pay_back_asap": false,
+      "start_year": 5
+    }
   ]
 }
