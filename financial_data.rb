@@ -67,9 +67,9 @@ class FinancialData
     num_years.times do |year|
       business_incomes = @businesses.map do |business|
         years_active = year - business[:start_year] + 1
-        income = years_active > 0 ? business[:initial_income] : 0
-        (1..years_active).each do |y|
-          growth_rate = y <= 5 ? business[:growth_rates][y - 1] : business[:growth_rates][5]
+        income = business[:initial_income]
+        (0..years_active).each do |y|
+          growth_rate = y < 5 ? business[:growth_rates][y] : business[:growth_rates][5]
           income *= (1 + growth_rate / 100)
         end
         { name: business[:name], income: income }
@@ -125,9 +125,7 @@ class FinancialData
       debt_repayments = total_principal_payment
 
       @businesses.each do |business|
-        if business[:start_year] == year + 1
-          bank_balance -= business[:purchase_price]
-        end
+        bank_balance -= business[:purchase_price] if business[:start_year] == year + 1
       end
 
       bank_balance += available_cash
